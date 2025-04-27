@@ -6,19 +6,13 @@ from django.shortcuts import get_object_or_404
 
 from .models import Product
 from .serializers import ProductSerializer
-from .permissions import IsStaffEditorPermission
 
-from api.authentication import TokenAuthentication
+from api.mixins import StaffEditorPermissionMixin
 
-class ProductListCreateAPIView(generics.ListCreateAPIView):
+class ProductListCreateAPIView(StaffEditorPermissionMixin,generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class=ProductSerializer
-    authentication_classes=[
-        authentication.SessionAuthentication,
-        TokenAuthentication    
-    ]
-    permission_classes=[permissions.IsAdminUser,IsStaffEditorPermission]
-
+   
     def perform_create(self,serializer):
         #seralizer.save(user=self.request.user)
         #print(seralizer.validated_data)
@@ -32,14 +26,14 @@ product_list_create_view = ProductListCreateAPIView.as_view()
 
 
 
-class ProductDetailApiView(generics.RetrieveAPIView):
+class ProductDetailApiView(StaffEditorPermissionMixin,generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class=ProductSerializer
 
 product_detail_view = ProductDetailApiView.as_view()
 
 
-class ProductUpdateApiView(generics.UpdateAPIView):
+class ProductUpdateApiView(StaffEditorPermissionMixin,generics.UpdateAPIView):
     queryset = Product.objects.all()
     serializer_class=ProductSerializer
     lookup_field='pk'
@@ -53,7 +47,7 @@ product_update_view = ProductUpdateApiView.as_view()
 
 
 
-class ProductDestroyAPIView(generics.DestroyAPIView):
+class ProductDestroyAPIView(StaffEditorPermissionMixin,generics.DestroyAPIView):
     queryset = Product.objects.all()
     serializer_class=ProductSerializer
     lookup_field='pk'
