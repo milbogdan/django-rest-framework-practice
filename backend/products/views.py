@@ -3,7 +3,7 @@ from rest_framework import generics
 from .models import Product
 from .serializers import ProductSerializer
 
-class ProductCreateAPIView(generics.CreateAPIView):
+class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class=ProductSerializer
 
@@ -12,12 +12,19 @@ class ProductCreateAPIView(generics.CreateAPIView):
         print(seralizer.validated_data)
         seralizer.save()
 
-product_create_view = ProductCreateAPIView.as_view()
+product_list_create_view = ProductListCreateAPIView.as_view()
 
 class ProductDetailApiView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class=ProductSerializer
 
 product_detail_view = ProductDetailApiView.as_view()
+
+
+class ProductListApiView(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class=ProductSerializer
+
+product_list_view = ProductListApiView.as_view()
 
      
