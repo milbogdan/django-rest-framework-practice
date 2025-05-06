@@ -1,6 +1,7 @@
 from rest_framework import generics,mixins,permissions,authentication
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny,IsAdminUser
 
 from django.shortcuts import get_object_or_404
 
@@ -21,6 +22,11 @@ class ProductListCreateAPIView(UserQuerySetMixin,StaffEditorPermissionMixin,gene
         if content is None:
             content = title
         serializer.save(user=self.request.user,content=content)
+
+    def get_permissions(self):
+        if self.request.method == "POST":
+            return [IsAdminUser()]
+        return [AllowAny()]
 
     # def get_queryset(self,*args,**kwargs):
     #     qs=super().get_queryset(*args,**kwargs)
